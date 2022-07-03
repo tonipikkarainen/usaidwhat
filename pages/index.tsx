@@ -1,11 +1,9 @@
-import { Button, IconButton, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import styled from 'styled-components';
 import { auth } from '../firebase';
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import {
     collection,
     query,
@@ -13,12 +11,10 @@ import {
     onSnapshot,
     orderBy,
 } from 'firebase/firestore';
-import { createLesson } from '../service/lessonApi';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { db } from '../firebase';
+import Header from '../components/Header';
 
 const Home: NextPage = () => {
-    const [input, setInput] = useState('');
     const [lessons, setLessons] = useState<string[]>([]);
     const lessonsQuery = query(
         collection(db, 'lessons'),
@@ -36,20 +32,6 @@ const Home: NextPage = () => {
         return () => unsubscribe();
     }, []);
 
-    const create = async () => {
-        if (auth?.currentUser) {
-            await createLesson(auth.currentUser.uid, input);
-            return;
-        }
-        console.log('No user');
-    };
-
-    const logOut = () => {
-        if (auth.currentUser) {
-            auth.signOut();
-        }
-    };
-
     const lessonsDiv = lessons.map((lesson) => (
         <div key={lesson}>{lesson}</div>
     ));
@@ -64,16 +46,8 @@ const Home: NextPage = () => {
                 />
                 <link rel='icon' href='/favicon.ico' />
             </Head>
-            <Button onClick={logOut}>LogOut</Button>
-            <TextField
-                id='outlined-basic'
-                label='Create lesson'
-                variant='filled'
-                onChange={(event) => setInput(event.target.value)}
-            />
-            <IconButton onClick={create} disabled={input.length === 0}>
-                <ArrowCircleRightIcon fontSize='large'></ArrowCircleRightIcon>
-            </IconButton>
+            <Header />
+
             {lessonsDiv}
         </div>
     );
