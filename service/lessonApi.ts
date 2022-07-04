@@ -6,21 +6,45 @@ import {
     query,
     where,
     getDocs,
-    QuerySnapshot,
-    DocumentData,
+    doc,
 } from 'firebase/firestore';
 
 export const createLesson = async (userId: string, lessonName: string) => {
     const lessonsRef = collection(db, 'lessons');
+    let pin = Math.floor(1000 + Math.random() * 9000);
+    console.log(pin);
+    // Check that pin does not exist at least for open lessons
+    //
     const data = {
         name: lessonName,
         ownerId: userId,
         createdAt: Timestamp.now(),
+        pin: pin,
+        isActive: true,
     };
-    // Mitä tekee setDoc, jos userId on jo olemassa?
+
     try {
         await addDoc(lessonsRef, data);
         console.log('created lesson ' + userId + lessonName);
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+export const createMessage = async (lessonId: string, message: string) => {
+    const messagesRef = collection(db, `lessons/${lessonId}/messages`);
+
+    // Check that pin does not exist at least for open lessons
+    //
+    console.log(lessonId);
+    const data = {
+        message: message,
+        createdAt: Timestamp.now(),
+    };
+
+    try {
+        await addDoc(messagesRef, data);
+        console.log('created message ' + message);
     } catch (error) {
         console.error(error);
     }

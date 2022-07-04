@@ -5,11 +5,17 @@ import { provider, auth } from '../firebase';
 import { signInWithPopup } from 'firebase/auth';
 import Head from 'next/head';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import { useRouter } from 'next/router';
 
 interface ILoginProps {}
 
 const Login: FunctionComponent<ILoginProps> = (props) => {
     const [input, setInput] = useState('');
+    const router = useRouter();
+
+    const enterLesson = () => {
+        router.push(`/createMessage/${input}`);
+    };
 
     const signIn = () => {
         signInWithPopup(auth, provider).catch((error) => {
@@ -39,7 +45,10 @@ const Login: FunctionComponent<ILoginProps> = (props) => {
                         variant='filled'
                         onChange={(event) => setInput(event.target.value)}
                     />
-                    <IconButton disabled={input.length === 0}>
+                    <IconButton
+                        onClick={enterLesson}
+                        disabled={input.length === 0}
+                    >
                         <ArrowCircleRightIcon fontSize='large'></ArrowCircleRightIcon>
                     </IconButton>
                 </JoinContainer>

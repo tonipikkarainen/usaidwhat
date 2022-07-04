@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import styled from 'styled-components';
 import { auth } from '../firebase';
 import {
     collection,
@@ -13,6 +12,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase';
 import Header from '../components/Header';
+import Sidebar from '../components/Sidebar';
 
 const Home: NextPage = () => {
     const [lessons, setLessons] = useState<string[]>([]);
@@ -48,7 +48,7 @@ const Home: NextPage = () => {
             </Head>
             <Header />
 
-            {lessonsDiv}
+            <Sidebar />
         </div>
     );
 };

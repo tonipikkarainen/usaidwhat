@@ -19,6 +19,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
     const create = async () => {
         if (auth?.currentUser) {
             await createLesson(auth.currentUser.uid, input);
+            setInput('');
             return;
         }
         console.log('No user');
@@ -32,6 +33,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
                 label='Create lesson'
                 variant='filled'
                 onChange={(event) => setInput(event.target.value)}
+                value={input}
             />
             <IconButton onClick={create} disabled={input.length === 0}>
                 <ArrowCircleRightIcon fontSize='large'></ArrowCircleRightIcon>
@@ -47,4 +49,8 @@ const Container = styled.div`
     align-items: center;
     padding: 15px;
     border-bottom: 3px solid whitesmoke;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: white;
 `;
