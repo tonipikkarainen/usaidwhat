@@ -23,18 +23,6 @@ const Home: NextPage = () => {
 
     // Listening to all the lessons
     // Maybe should listen only messages
-    useEffect(() => {
-        const unsubscribe = onSnapshot(lessonsQuery, (snap) => {
-            snap.docs.map((doc) => console.log(doc.data()));
-            setLessons(snap.docs.map((doc) => doc.data().name));
-        });
-
-        return () => unsubscribe();
-    }, []);
-
-    const lessonsDiv = lessons.map((lesson) => (
-        <div key={lesson}>{lesson}</div>
-    ));
 
     return (
         <div>

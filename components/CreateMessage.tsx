@@ -2,22 +2,21 @@ import { useEffect, useState } from 'react';
 
 import styled from 'styled-components';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import { db } from '../../firebase';
-import { LessonType } from '../../types';
+import { db } from '../firebase';
+import { LessonType } from '../types';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import { Button, IconButton, TextField } from '@mui/material';
-import { createMessage } from '../../service/lessonApi';
-import { useRouter } from 'next/router';
+import { createMessage } from '../service/lessonApi';
 
-interface ICreateMessageProps {}
+interface ICreateMessageProps {
+    pin: number;
+}
 
-const CreateMessage: React.FunctionComponent = () => {
+const CreateMessage: React.FunctionComponent<ICreateMessageProps> = ({
+    pin,
+}) => {
     const [lesson, setLesson] = useState<LessonType | null>(null);
     const [input, setInput] = useState('');
-    const router = useRouter();
-    const pin = Array.isArray(router.query.pin)
-        ? router.query.pin[0]
-        : router.query.pin;
 
     const sendMessage = async () => {
         if (lesson?.isActive) {
@@ -30,7 +29,7 @@ const CreateMessage: React.FunctionComponent = () => {
 
     // Create a query against the collection.
     const q = pin
-        ? query(lessonsRef, where('pin', '==', parseInt(pin)))
+        ? query(lessonsRef, where('pin', '==', pin))
         : query(lessonsRef, where('pin', '==', 1234));
     console.log(typeof pin);
 

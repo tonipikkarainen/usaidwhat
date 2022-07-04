@@ -6,15 +6,17 @@ import { signInWithPopup } from 'firebase/auth';
 import Head from 'next/head';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import { useRouter } from 'next/router';
+import CreateMessage from '../components/CreateMessage';
 
 interface ILoginProps {}
 
 const Login: FunctionComponent<ILoginProps> = (props) => {
     const [input, setInput] = useState('');
+    const [isSending, setIsSending] = useState(false);
     const router = useRouter();
 
     const enterLesson = () => {
-        router.push(`/createMessage/${input}`);
+        setIsSending(true);
     };
 
     const signIn = () => {
@@ -53,6 +55,7 @@ const Login: FunctionComponent<ILoginProps> = (props) => {
                     </IconButton>
                 </JoinContainer>
             </LoginContainer>
+            {isSending && <CreateMessage pin={parseInt(input)} />}
         </Container>
     );
 };
