@@ -6,18 +6,28 @@ interface IMessageScreenProps {
     id: any;
 }
 
+type Message = {
+    id: string;
+    message: string;
+};
+
 const MessageScreen: React.FunctionComponent<IMessageScreenProps> = ({
     id,
 }) => {
     const messageQuery = query(collection(db, `lessons/${id}/messages`));
 
-    const [messages, setMessages] = useState<string[]>([]);
+    const [messages, setMessages] = useState<Message[]>([]);
 
     useEffect(() => {
         const unsubscribe = onSnapshot(messageQuery, (snap) => {
             snap.docs.map((doc) => console.log(doc.data()));
             console.log('Täällä ollaan');
-            setMessages(snap.docs.map((doc) => doc.data().message));
+            setMessages(
+                snap.docs.map((doc) => ({
+                    id: doc.id,
+                    message: doc.data().message,
+                }))
+            );
         });
 
         return () => {
@@ -27,7 +37,9 @@ const MessageScreen: React.FunctionComponent<IMessageScreenProps> = ({
         };
     }, [id]);
 
-    const messagesDiv = messages.map((msg) => <div>{msg}</div>);
+    const messagesDiv = messages.map((msg) => (
+        <div key={msg.id}>{msg.message}</div>
+    ));
     return <div>{messagesDiv}</div>;
 };
 
