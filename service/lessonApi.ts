@@ -48,7 +48,6 @@ export const createMessage = async (lessonId: string, message: string) => {
     } catch (error) {
         console.error(error);
     }
-    createLesson('test', 'test');
 };
 
 export const getLessonsByUser = async (userId: string) => {
