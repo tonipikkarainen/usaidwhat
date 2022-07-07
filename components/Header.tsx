@@ -1,18 +1,20 @@
 import { Button, IconButton, TextField } from '@mui/material';
-import * as React from 'react';
 import { auth } from '../firebase';
 import { useState } from 'react';
 import { createLesson } from '../service/lessonApi';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import styled from 'styled-components';
+import { useRouter } from 'next/router';
 
 interface HeaderProps {}
 
 const Header: React.FunctionComponent<HeaderProps> = (props) => {
     const [input, setInput] = useState('');
-    const logOut = () => {
+    const router = useRouter();
+    const logOut = async () => {
         if (auth.currentUser) {
-            auth.signOut();
+            await auth.signOut();
+            router.push(`/`);
         }
     };
 

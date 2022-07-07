@@ -6,7 +6,8 @@ import { signInWithPopup } from 'firebase/auth';
 import Head from 'next/head';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import { useRouter } from 'next/router';
-import CreateMessage from '../components/CreateMessage';
+
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 interface ILoginProps {}
 
@@ -14,9 +15,11 @@ const Login: FunctionComponent<ILoginProps> = (props) => {
     const [input, setInput] = useState('');
     const [isSending, setIsSending] = useState(false);
     const router = useRouter();
+    const [user] = useAuthState(auth);
 
     const enterLesson = () => {
-        setIsSending(true);
+        router.push(`/createMessage/${input}`);
+        //setIsSending(true);
     };
 
     const signIn = () => {
@@ -25,6 +28,11 @@ const Login: FunctionComponent<ILoginProps> = (props) => {
             alert(errorMessage);
         });
     };
+
+    if (user) {
+        router.push(`/`);
+        //return <Home />;
+    }
 
     return (
         <Container>
@@ -55,8 +63,6 @@ const Login: FunctionComponent<ILoginProps> = (props) => {
                     </IconButton>
                 </JoinContainer>
             </LoginContainer>
-            {isSending && <CreateMessage pin={parseInt(input)} />}
-            <Button onClick={() => router.push(`/createMessage`)}>test</Button>
         </Container>
     );
 };
