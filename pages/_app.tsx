@@ -6,6 +6,7 @@ import Login from './login';
 import Loading from '../components/Loading';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 function MyApp({ Component, pageProps }: AppProps) {
     const [user, loading] = useAuthState(auth);
@@ -14,7 +15,12 @@ function MyApp({ Component, pageProps }: AppProps) {
     if (loading) return <Loading />;
 
     //if (!user) return <Login />;
-    return <Component {...pageProps} />;
+    return (
+        <div>
+            <Toaster />
+            <Component {...pageProps} />;
+        </div>
+    );
 }
 
 export default MyApp;

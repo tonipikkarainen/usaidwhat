@@ -8,6 +8,7 @@ import {
     getDocs,
     doc,
 } from 'firebase/firestore';
+import toast from 'react-hot-toast';
 
 export const createLesson = async (userId: string, lessonName: string) => {
     const lessonsRef = collection(db, 'lessons');
@@ -33,6 +34,7 @@ export const createLesson = async (userId: string, lessonName: string) => {
 
 export const createMessage = async (lessonId: string, message: string) => {
     const messagesRef = collection(db, `lessons/${lessonId}/messages`);
+    const toastId = toast.loading('Sending a message...');
 
     // Check that pin does not exist at least for open lessons
     //
@@ -45,8 +47,14 @@ export const createMessage = async (lessonId: string, message: string) => {
     try {
         await addDoc(messagesRef, data);
         console.log('created message ' + message);
+        toast.success('Message sent!', {
+            id: toastId,
+        });
     } catch (error) {
         console.error(error);
+        toast.error('error' + error, {
+            id: toastId,
+        });
     }
 };
 

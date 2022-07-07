@@ -8,21 +8,38 @@ import { db } from '../../firebase';
 import { createMessage } from '../../service/lessonApi';
 import { LessonType } from '../../types';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import { useForm } from 'react-hook-form';
+
+type FormData = {
+    msg: string;
+};
 
 const CreateMsg: React.FunctionComponent = () => {
     const router = useRouter();
     const pin = Array.isArray(router.query.pin)
         ? router.query.pin[0]
         : router.query.pin;
-    console.log(pin);
+
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        formState: { errors, isDirty, isValid },
+    } = useForm<FormData>({ mode: 'onChange' });
+
+    const onSubmit = handleSubmit(async (data) => {
+        await sendMessage(data.msg);
+        setValue('msg', '');
+        console.log(data);
+    });
 
     const [lesson, setLesson] = useState<LessonType | null>(null);
     const [input, setInput] = useState('');
 
-    const sendMessage = async () => {
+    const sendMessage = async (msg: string) => {
         if (lesson?.isActive) {
-            console.log(lesson.id);
-            createMessage(lesson.id, input);
+            console.log('here:' + lesson.id);
+            createMessage(lesson.id, msg);
         }
     };
 
@@ -70,15 +87,25 @@ const CreateMsg: React.FunctionComponent = () => {
         <Container>
             <NimiContainer>Tunnin nimi: {lesson.name}</NimiContainer>
             <JoinContainer>
-                <InputOma
-                    id='outlined-basic'
-                    label='Kysy jotain'
-                    variant='filled'
-                    onChange={(event: any) => setInput(event.target.value)}
-                />
-                <IconButton onClick={sendMessage} disabled={input.length === 0}>
-                    <ArrowCircleRightIcon fontSize='large'></ArrowCircleRightIcon>
-                </IconButton>
+                <form onSubmit={onSubmit}>
+                    <InputOma
+                        id='outlined-basic'
+                        label='Kysy jotain'
+                        variant='filled'
+                        {...register('msg', {
+                            required: true,
+                            maxLength: 50,
+                        })}
+                    />
+                    <IconButton type='submit' disabled={!isDirty || !isValid}>
+                        <ArrowCircleRightIcon fontSize='large'></ArrowCircleRightIcon>
+                    </IconButton>
+                    {errors.msg && (
+                        <ErrorP>
+                            Message is required and max length is xx
+                        </ErrorP>
+                    )}
+                </form>
             </JoinContainer>
             <Button onClick={() => router.push(`/login`)}>To login page</Button>
         </Container>
@@ -86,6 +113,10 @@ const CreateMsg: React.FunctionComponent = () => {
 };
 
 export default CreateMsg;
+
+const ErrorP = styled.p`
+    color: red;
+`;
 
 const Container = styled.div`
     height: 100vh;
