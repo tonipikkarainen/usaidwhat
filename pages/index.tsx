@@ -13,17 +13,16 @@ import {
 import { db } from '../firebase';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
+import { useRouter } from 'next/router';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import Login from './login';
 
 const Home: NextPage = () => {
-    const [lessons, setLessons] = useState<string[]>([]);
-    const lessonsQuery = query(
-        collection(db, 'lessons'),
-        where('ownerId', '==', auth?.currentUser?.uid)
-    );
-
+    const router = useRouter();
+    const [user, loading] = useAuthState(auth);
     // Listening to all the lessons
     // Maybe should listen only messages
-
+    if (!user) return <Login />;
     return (
         <div>
             <Head>

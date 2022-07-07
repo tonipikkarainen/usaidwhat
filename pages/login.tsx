@@ -56,6 +56,7 @@ const Login: FunctionComponent<ILoginProps> = (props) => {
                 </JoinContainer>
             </LoginContainer>
             {isSending && <CreateMessage pin={parseInt(input)} />}
+            <Button onClick={() => router.push(`/createMessage`)}>test</Button>
         </Container>
     );
 };
