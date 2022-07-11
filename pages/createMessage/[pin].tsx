@@ -1,4 +1,4 @@
-import { Button, IconButton, TextField } from '@mui/material';
+import { Button, CircularProgress, IconButton, TextField } from '@mui/material';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -9,6 +9,8 @@ import { createMessage } from '../../service/lessonApi';
 import { LessonType } from '../../types';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import { useForm } from 'react-hook-form';
+import Loading from '../../components/Loading';
+import toast from 'react-hot-toast';
 
 type FormData = {
     msg: string;
@@ -34,13 +36,22 @@ const CreateMsg: React.FunctionComponent = () => {
     });
 
     const [lesson, setLesson] = useState<LessonType | null>(null);
-    const [input, setInput] = useState('');
+    const [loading, setLoading] = useState(true);
 
     const sendMessage = async (msg: string) => {
-        if (lesson?.isActive) {
-            console.log('here:' + lesson.id);
-            createMessage(lesson.id, msg);
+        // tee paremmin..
+        // tsekataan onko vielä aktiivinen
+
+        const { data, id } = await getLesson(parseInt(pin!));
+
+        if (!data?.isActive) {
+            console.log('no longer active');
+            toast.error('This lesson is no longer active');
+            setLesson({ ...lesson, isActive: false });
+            return;
         }
+
+        if (lesson) createMessage(lesson.id, msg);
     };
 
     const lessonsRef = collection(db, 'lessons');
@@ -55,12 +66,20 @@ const CreateMsg: React.FunctionComponent = () => {
         console.log('pin: ' + code);
         const querySnapshot = await getDocs(q);
         console.log('lesson: ' + querySnapshot.docs[0]?.data());
-        if (querySnapshot.docs[0]?.data()) {
+        setLoading(false);
+        return {
+            data: querySnapshot.docs[0]?.data(),
+            id: querySnapshot.docs[0]?.id,
+        };
+    };
+    const getAndSetLesson = async (code: number) => {
+        const { data, id } = await getLesson(code);
+        if (data) {
             setLesson({
-                name: querySnapshot.docs[0]?.data().name,
-                pin: querySnapshot.docs[0]?.data().pin,
-                id: querySnapshot.docs[0]?.id,
-                isActive: querySnapshot.docs[0]?.data().isActive,
+                name: data.name,
+                pin: data.pin,
+                id: id,
+                isActive: data.isActive,
             });
         }
     };
@@ -68,24 +87,34 @@ const CreateMsg: React.FunctionComponent = () => {
     useEffect(() => {
         if (pin) {
             // Tee jotain paremmin tässä
-            getLesson(parseInt(pin));
+            getAndSetLesson(parseInt(pin));
             console.log('useeffect');
         }
     }, []);
 
-    if (!lesson || lesson == undefined) {
+    if (loading) {
+        return <Loading />;
+    }
+
+    if (!lesson) {
         return (
-            <div>
-                No lesson found
-                <Button onClick={() => router.push(`/login`)}>
-                    To login page
+            <NoLessonContainer>
+                <h1>No active lesson found with this pin...</h1>
+                <Button
+                    variant='contained'
+                    onClick={() => router.push(`/login`)}
+                >
+                    Back to login page
                 </Button>
-            </div>
+            </NoLessonContainer>
         );
     }
     return (
         <Container>
-            <NimiContainer>Tunnin nimi: {lesson.name}</NimiContainer>
+            <NimiContainer>
+                Tunnin nimi: {lesson.name} status:{' '}
+                {lesson.isActive ? <p>active</p> : <p>not active</p>}
+            </NimiContainer>
             <JoinContainer>
                 <form onSubmit={onSubmit}>
                     <InputOma
@@ -97,7 +126,10 @@ const CreateMsg: React.FunctionComponent = () => {
                             maxLength: 50,
                         })}
                     />
-                    <IconButton type='submit' disabled={!isDirty || !isValid}>
+                    <IconButton
+                        type='submit'
+                        disabled={!isDirty || !isValid || !lesson.isActive}
+                    >
                         <ArrowCircleRightIcon fontSize='large'></ArrowCircleRightIcon>
                     </IconButton>
                     {errors.msg && (
@@ -126,7 +158,15 @@ const Container = styled.div`
     justify-content: center;
 `;
 
-const NimiContainer = styled.p`
+const NoLessonContainer = styled.div`
+    display: flex;
+    align-items: center;
+    height: 100vh;
+    justify-content: center;
+    flex-direction: column;
+`;
+
+const NimiContainer = styled.div`
     display: flex;
 `;
 

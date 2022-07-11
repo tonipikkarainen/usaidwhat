@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     return (
         <div>
             <Toaster />
-            <Component {...pageProps} />;
+            <Component {...pageProps} />
         </div>
     );
 }
