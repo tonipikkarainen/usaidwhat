@@ -11,10 +11,16 @@ import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import { useForm } from 'react-hook-form';
 import Loading from '../../components/Loading';
 import toast from 'react-hot-toast';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 
 type FormData = {
     msg: string;
 };
+
+interface Props {
+    msg: any;
+}
 
 const CreateMsg: React.FunctionComponent = () => {
     const router = useRouter();
@@ -47,7 +53,7 @@ const CreateMsg: React.FunctionComponent = () => {
         if (!data?.isActive) {
             console.log('no longer active');
             toast.error('This lesson is no longer active');
-            setLesson({ ...lesson, isActive: false });
+            if (lesson) setLesson({ ...lesson, isActive: false });
             return;
         }
 
@@ -58,7 +64,7 @@ const CreateMsg: React.FunctionComponent = () => {
 
     // Create a query against the collection.
 
-    console.log(typeof pin);
+    //console.log(typeof pin);
 
     const getLesson = async (code: number) => {
         const q = query(lessonsRef, where('pin', '==', code));
@@ -87,10 +93,10 @@ const CreateMsg: React.FunctionComponent = () => {
     useEffect(() => {
         if (pin) {
             // Tee jotain paremmin tässä
-            getAndSetLesson(parseInt(pin));
             console.log('useeffect');
+            getAndSetLesson(parseInt(pin));
         }
-    }, []);
+    }, [pin]);
 
     if (loading) {
         return <Loading />;
@@ -111,43 +117,68 @@ const CreateMsg: React.FunctionComponent = () => {
     }
     return (
         <Container>
-            <NimiContainer>
-                Tunnin nimi: {lesson.name} status:{' '}
-                {lesson.isActive ? <p>active</p> : <p>not active</p>}
-            </NimiContainer>
-            <JoinContainer>
-                <form onSubmit={onSubmit}>
-                    <InputOma
-                        id='outlined-basic'
-                        label='Kysy jotain'
-                        variant='filled'
-                        {...register('msg', {
-                            required: true,
-                            maxLength: 50,
-                        })}
-                    />
-                    <IconButton
-                        type='submit'
-                        disabled={!isDirty || !isValid || !lesson.isActive}
-                    >
-                        <ArrowCircleRightIcon fontSize='large'></ArrowCircleRightIcon>
-                    </IconButton>
-                    {errors.msg && (
-                        <ErrorP>
+            <BoxContainer>
+                <NimiContainer>
+                    <h3>Tunnin nimi: {lesson.name} </h3>
+                    {lesson.isActive ? (
+                        <StatusBox>
+                            <StatusText>status: aktiivinen</StatusText>
+                            <CheckCircleIcon sx={{ color: '#4bd44b' }} />
+                        </StatusBox>
+                    ) : (
+                        <StatusBox>
+                            <StatusText>status: ei-aktiivinen</StatusText>
+                            <DoDisturbIcon sx={{ color: '#bc0000' }} />{' '}
+                        </StatusBox>
+                    )}
+                </NimiContainer>
+                <JoinContainer>
+                    <form onSubmit={onSubmit}>
+                        <InputOma
+                            id='outlined-basic'
+                            label='Kysy jotain'
+                            variant='filled'
+                            {...register('msg', {
+                                required: true,
+                                maxLength: 50,
+                            })}
+                        />
+                        <IconButton
+                            type='submit'
+                            disabled={!isDirty || !isValid || !lesson.isActive}
+                        >
+                            <ArrowCircleRightIcon fontSize='large'></ArrowCircleRightIcon>
+                        </IconButton>
+
+                        <ErrorP msg={errors.msg}>
                             Message is required and max length is xx
                         </ErrorP>
-                    )}
-                </form>
-            </JoinContainer>
-            <Button onClick={() => router.push(`/login`)}>To login page</Button>
+                    </form>
+                </JoinContainer>
+                <Button onClick={() => router.push(`/login`)}>
+                    To login page
+                </Button>
+            </BoxContainer>
         </Container>
     );
 };
 
 export default CreateMsg;
 
-const ErrorP = styled.p`
+const ErrorP = styled.p<Props>`
     color: red;
+    visibility: ${(props) => (!!props.msg ? 'inline' : 'hidden')};
+`;
+const StatusText = styled.div`
+    padding-right: 15px;
+`;
+
+const StatusBox = styled.div`
+    color: #989898;
+    font-size: small;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px 15px 0px;
 `;
 
 const Container = styled.div`
@@ -166,8 +197,14 @@ const NoLessonContainer = styled.div`
     flex-direction: column;
 `;
 
+const BoxContainer = styled.div`
+    background-color: #ededed;
+    padding: 25px;
+`;
+
 const NimiContainer = styled.div`
     display: flex;
+    flex-direction: column;
 `;
 
 const JoinContainer = styled.div`

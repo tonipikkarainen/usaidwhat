@@ -1,6 +1,8 @@
 ## Steps to do
 
-# [] handle lesson active in createmessage
+# [x] handle lesson active in createmessage
+
+# [] Logic for pin creation
 
 # [] handle setting/showing lesson active in user
 
