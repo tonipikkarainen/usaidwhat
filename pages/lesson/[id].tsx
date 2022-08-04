@@ -38,13 +38,15 @@ const LessonContent: React.FunctionComponent<ILessonContentProps> = (props) => {
 export default LessonContent;
 
 const Container = styled.div`
-    height: 100vh;
-    background-color: white;
+    background-color: #e3bebe;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 `;
 
 const BodyCont = styled.div`
     display: flex;
-    height: 100%;
+    flex: 1 1 auto;
 `;
 
 const MessageCont = styled.div`
@@ -53,6 +55,7 @@ const MessageCont = styled.div`
     justify-content: center;
     flex: 3;
     flex-direction: column;
+    min-height: min-content;
 `;
 
 const SideBarCont = styled.div`
