@@ -75,14 +75,10 @@ const MessageScreen: React.FunctionComponent<IMessageScreenProps> = ({
 
 const Container = styled.div`
     width: 100%;
-    flex: 1;
     flex-direction: column;
     align-items: flex-end;
-    justify-content: end;
-    background-color: #f6f9fa;
     padding: 15px;
-    overflow-y: scroll;
-    bottom: 0;
+    height: 100%;
 `;
 
 const EndOfMessage = styled.div`

@@ -47,6 +47,6 @@ export default Sidebar;
 
 const Container = styled.div`
     background-color: white;
-    height: 100%;
+
     border-right: 5px whitesmoke solid;
 `;

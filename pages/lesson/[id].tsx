@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import styled from 'styled-components';
+import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import MessageScreen from '../../components/MessageScreen';
 import Sidebar from '../../components/Sidebar';
@@ -31,6 +32,7 @@ const LessonContent: React.FunctionComponent<ILessonContentProps> = (props) => {
                     <MessageScreen id={id} />
                 </MessageCont>
             </BodyCont>
+            <Footer />
         </Container>
     );
 };
@@ -38,7 +40,7 @@ const LessonContent: React.FunctionComponent<ILessonContentProps> = (props) => {
 export default LessonContent;
 
 const Container = styled.div`
-    background-color: #e3bebe;
+    background-color: #dfcaca;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -46,18 +48,21 @@ const Container = styled.div`
 
 const BodyCont = styled.div`
     display: flex;
-    flex: 1 1 auto;
+    flex: 10;
+    overflow-y: scroll;
 `;
 
 const MessageCont = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 3;
+    flex: 4;
     flex-direction: column;
-    min-height: min-content;
+    background-color: aliceblue;
+    overflow-y: scroll;
 `;
 
 const SideBarCont = styled.div`
     flex: 1;
+    overflow-y: scroll;
 `;

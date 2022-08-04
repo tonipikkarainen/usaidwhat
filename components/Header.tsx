@@ -54,5 +54,6 @@ const Container = styled.div`
     position: sticky;
     top: 0;
     z-index: 1;
+    flex: 1;
     background-color: white;
 `;
