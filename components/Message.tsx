@@ -11,7 +11,12 @@ const Message: React.FunctionComponent<IMessageProps> = ({
     message,
     date,
 }) => {
-    return <Container>{message}</Container>;
+    return (
+        <Container>
+            {message}
+            <PDate>{date}</PDate>
+        </Container>
+    );
 };
 
 export default Message;
@@ -25,4 +30,9 @@ const Container = styled.div`
     padding: 15px;
     margin-top: 1px;
     border-radius: 15px;
+`;
+
+const PDate = styled.div`
+    font-size: small;
+    color: #414040;
 `;
