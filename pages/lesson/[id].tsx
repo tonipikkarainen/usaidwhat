@@ -18,7 +18,7 @@ const LessonContent: React.FunctionComponent<ILessonContentProps> = (props) => {
     const id = Array.isArray(router.query.id)
         ? router.query.id[0]
         : router.query.id;
-    console.log(id);
+    console.log('id:' + id);
 
     if (!user) return <Login />;
     return (
@@ -53,11 +53,8 @@ const BodyCont = styled.div`
 `;
 
 const MessageCont = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
     flex: 4;
-    flex-direction: column;
+
     background-color: aliceblue;
     overflow-y: scroll;
 `;

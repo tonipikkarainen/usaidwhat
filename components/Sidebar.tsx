@@ -37,6 +37,7 @@ const Sidebar = () => {
             name={lesson.name}
             pin={lesson.pin}
             id={lesson.id}
+            isActive={lesson.isActive}
         />
     ));
 

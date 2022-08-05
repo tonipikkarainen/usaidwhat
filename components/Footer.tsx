@@ -20,5 +20,5 @@ const Container = styled.div`
     bottom: 0;
     z-index: 3;
     flex: 1;
-    background-color: #c6c6c6;
+    background-color: whitesmoke;
 `;

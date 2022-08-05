@@ -29,16 +29,14 @@ const MessageScreen: React.FunctionComponent<IMessageScreenProps> = ({
         if (endOfMessageRef?.current) {
             endOfMessageRef.current.scrollIntoView({
                 behavior: 'smooth',
-                block: 'end',
+                block: 'start',
             });
         }
     };
 
     useEffect(() => {
-        scrollToBottom();
         const unsubscribe = onSnapshot(messageQuery, (snap) => {
             snap.docs.map((doc) => console.log(doc.data().createdAt.toDate()));
-            console.log('Täällä ollaan');
 
             setMessages(
                 snap.docs.map((doc) => ({
@@ -77,8 +75,8 @@ const Container = styled.div`
     width: 100%;
     flex-direction: column;
     align-items: flex-end;
+    display: flex;
     padding: 15px;
-    height: 100%;
 `;
 
 const EndOfMessage = styled.div`

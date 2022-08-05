@@ -7,6 +7,7 @@ import {
     where,
     getDocs,
     doc,
+    setDoc,
 } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 
@@ -29,6 +30,23 @@ export const createLesson = async (userId: string, lessonName: string) => {
         console.log('created lesson ' + userId + lessonName);
     } catch (error) {
         console.error(error);
+    }
+};
+
+export const setIsActive = async (id: string, isActive: boolean) => {
+    const lessonsRef = doc(db, 'lessons', id);
+    const toastId = toast.loading('Updating lesson...');
+
+    try {
+        await setDoc(lessonsRef, { isActive: isActive }, { merge: true });
+        toast.success('Lesson updated!', {
+            id: toastId,
+        });
+    } catch (error) {
+        console.error(error);
+        toast.error('error' + error, {
+            id: toastId,
+        });
     }
 };
 
