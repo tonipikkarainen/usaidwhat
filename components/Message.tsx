@@ -29,6 +29,7 @@ const Container = styled.div`
     background-color: #dfe2e4;
     padding: 15px;
     margin-top: 1px;
+    margin-bottom: 3px;
     border-radius: 15px;
 `;
 

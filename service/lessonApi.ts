@@ -55,7 +55,20 @@ export const deleteLesson = async (id: string) => {
     const lessonsRef = doc(db, 'lessons', id);
     const toastId = toast.loading('Deleting lesson...');
 
+    // getMessages
+    const messageQuery = query(collection(db, `lessons/${id}/messages`));
+
     try {
+        // Mahdollinen muistivuoto, jos paljon viestejä,
+        // TODO: tee paremmin!
+        const querySnapshot = await getDocs(messageQuery);
+        if (querySnapshot) {
+            querySnapshot.forEach((doc) => {
+                deleteDoc(doc.ref);
+                console.log('deleting message: ' + doc.id);
+            });
+        }
+
         await deleteDoc(lessonsRef);
         toast.success('Lesson deleted!', {
             id: toastId,

@@ -40,7 +40,7 @@ const LessonContent: React.FunctionComponent<ILessonContentProps> = (props) => {
 export default LessonContent;
 
 const Container = styled.div`
-    background-color: #dfcaca;
+    background-color: #dedede;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -48,7 +48,7 @@ const Container = styled.div`
 
 const BodyCont = styled.div`
     display: flex;
-    flex: 10;
+    flex: 14;
     overflow-y: scroll;
 `;
 
