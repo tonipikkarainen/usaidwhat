@@ -17,7 +17,11 @@ export const createLesson = async (userId: string, lessonName: string) => {
     let pin = Math.floor(1000 + Math.random() * 9000);
     console.log(pin);
     // Check that pin does not exist at least for open lessons
-    //
+    // Käy läpi kaikki tunnit - jos löytyy samanlainen pin, luo uusi mutta viidellä numerolla
+    // kuuteen numeroon stoppi - ja ilmoitus, että tunnin luonti ei onnistu??
+    //await pinOk(pin);
+
+    const toastId = toast.loading('Creating lesson...');
     const data = {
         name: lessonName,
         ownerId: userId,
@@ -28,9 +32,20 @@ export const createLesson = async (userId: string, lessonName: string) => {
 
     try {
         await addDoc(lessonsRef, data);
+        toast.success('Lesson created!', {
+            id: toastId,
+        });
         console.log('created lesson ' + userId + lessonName);
     } catch (error) {
-        console.error(error);
+        //console.error(error);
+        toast.error(
+            'error: ' +
+                error +
+                '\n Please contact toni.t.pikkarainen@gmail.com \n to upgrade permissions.',
+            {
+                id: toastId,
+            }
+        );
     }
 };
 
@@ -49,6 +64,19 @@ export const setIsActive = async (id: string, isActive: boolean) => {
             id: toastId,
         });
     }
+};
+
+const pinOk = async (pin: number) => {
+    const lessonsRef = collection(db, 'lessons');
+
+    const querySnapshot = await getDocs(lessonsRef);
+    if (querySnapshot) {
+        querySnapshot.forEach((doc) => {
+            console.log('pin ' + doc.data().pin);
+            if (pin === doc.data().pin) return false;
+        });
+    }
+    return true;
 };
 
 export const deleteLesson = async (id: string) => {
