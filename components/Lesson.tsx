@@ -2,9 +2,11 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from '@mui/material';
 import { auth } from '../firebase';
-import { setIsActive } from '../service/lessonApi';
+import { deleteLesson, setIsActive } from '../service/lessonApi';
+import DeleteDialog from './DeleteDialog';
 
 interface ILessonProps {
     name: string;
@@ -34,13 +36,24 @@ const Lesson: React.FunctionComponent<ILessonProps> = ({
             await setIsActive(id, !isActive);
             return;
         }
-        //console.log('No user');
+    };
+
+    const deleteLes = async (del: boolean) => {
+        console.log('isactive: ' + isActive);
+        if (auth?.currentUser && del) {
+            console.log('deleting');
+            await deleteLesson(id);
+            return;
+        }
+        console.log('not deleting');
     };
 
     return (
         <Container onClick={enterLesson}>
             <Name>{name}</Name>
             <Pin>{pin}</Pin>
+            <DeleteDialog onClose={deleteLes} />
+
             {isActive ? (
                 <IconButton onClick={(e) => changeActiveState(e)}>
                     <ToggOn />

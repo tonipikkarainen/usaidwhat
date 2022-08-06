@@ -4,8 +4,10 @@
 
 # [] Logic for pin creation
 
-# [] handle setting/showing lesson active in user
+# [x] handle setting/showing lesson active in user
 
-# [] show messages more nicely
+# [x] show messages more nicely
 
 # [] weird error when signing in
+
+# [x] Deleting lesson
