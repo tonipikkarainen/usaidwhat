@@ -18,6 +18,10 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
         }
     };
 
+    const toHome = async () => {
+        router.push(`/`);
+    };
+
     const create = async () => {
         if (auth?.currentUser) {
             await createLesson(auth.currentUser.uid, input);
@@ -40,6 +44,9 @@ const Header: React.FunctionComponent<HeaderProps> = (props) => {
             <IconButton onClick={create} disabled={input.length === 0}>
                 <ArrowCircleRightIcon fontSize='large'></ArrowCircleRightIcon>
             </IconButton>
+            <Button variant='contained' onClick={toHome}>
+                HOME
+            </Button>
         </Container>
     );
 };
