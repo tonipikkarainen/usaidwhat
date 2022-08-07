@@ -1,21 +1,14 @@
-import { useEffect, useState } from 'react';
-
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { auth } from '../firebase';
-import {
-    collection,
-    query,
-    where,
-    onSnapshot,
-    orderBy,
-} from 'firebase/firestore';
-import { db } from '../firebase';
+
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import { useRouter } from 'next/router';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Login from './login';
+import styled from 'styled-components';
+import Footer from '../components/Footer';
 
 const Home: NextPage = () => {
     const router = useRouter();
@@ -24,7 +17,7 @@ const Home: NextPage = () => {
     // Maybe should listen only messages
     if (!user) return <Login />;
     return (
-        <div>
+        <Container>
             <Head>
                 <title>U said what</title>
                 <meta
@@ -35,9 +28,44 @@ const Home: NextPage = () => {
             </Head>
             <Header />
 
-            <Sidebar />
-        </div>
+            <BodyCont>
+                <SideBarCont>
+                    <Sidebar />
+                </SideBarCont>
+                <InfoCont>
+                    <h1>Choose a lesson</h1>
+                </InfoCont>
+            </BodyCont>
+            <Footer />
+        </Container>
     );
 };
 
 export default Home;
+
+const Container = styled.div`
+    background-color: #dedede;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+`;
+
+const BodyCont = styled.div`
+    display: flex;
+    flex: 14;
+    overflow-y: scroll;
+`;
+
+const InfoCont = styled.div`
+    flex: 4;
+    display: flex;
+    background-color: aliceblue;
+    overflow-y: scroll;
+    justify-content: center;
+    align-items: center;
+`;
+
+const SideBarCont = styled.div`
+    flex: 1;
+    overflow-y: scroll;
+`;
